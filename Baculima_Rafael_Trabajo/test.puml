@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+'https://plantuml.com/class-diagram
+
+class Usuario {
+- id_usuario: int
+- correo: string
+- contraseña: string
+- nombre: string
+- apellido: string
+- ingresos: list
+- metas_ahorro: list
+- presupuesto: Presupuesto
+
++ Login()
++ ver_resumen_financiero()
++ agregar_ingreso(movimiento)
++ agregar_gasto(movimiento)
++ agregar_meta(meta)
+}
+
+class Presupuesto {
+- cantidad_total: float
+- movimientos: dictionary
+- fecha_inicio: date
+- fecha_fin: date
+- categorias_presupuestadas: dictionary
+
++ establecer_presupuesto()
++ actualizar_gasto(movimiento)
++ obtener_reporte_presupuesto()
+}
+
+class Movimiento  {
+- valor: string
+- categoría: string
+- fecha: date
+- descripcion: string
+- tipo: string
+
++ modificar_valor()
++ modificar_categoria()
++ modificar_fecha()
+}
+
+class Autenticacion {
++ ingresar()
++ cerrar_sesion()
++ registrar_usuario()
+}
+
+class Meta {
+- objetivo: string
+- cantidad: float
+- fecha_limite: date
+- fecha_creacion: date
+- progreso: float
+
++ modificar_limite()
++ modificar_cantidad()
++ modificar_fechaLimite()
++ actualizar_progreso(cantidad)
++ verificar_si_alcanzada()
+}
+
+enum CategoriasIngresos {
+SALARIO
+TRABAJO_AUTONOMO
+INVERSIÓN
+ALQUILER
+TRANSFERENCIA
+REMESA
+PRÉSTAMO
+OTROS
+}
+
+enum CategoriasGastos {
+VIVIENDA
+ALIMENTACIÓN
+SALUD
+EDUCACIÓN
+ENTRETENIMIENTO
+CUIDADO_PERSONAL
+DEUDA
+AHORRO_INVERSIÓN
+REGALO_DONACIÓN
+IMPUESTO
+OTROS
+}
+
+class Notificacion {
+- id_notificacion: int
+- usuario_id: int
+- mensaje: string
+- fecha: datetime
+- leida: boolean
+
+- tipo: string // (ej: "alerta_presupuesto", "recordatorio_meta")
+}
+
+Usuario "1" --* "muchos" Notificacion : recibe >
+
+Usuario "1" --* "*" Movimiento : gestiona >
+Usuario "1" --* "*" Meta : tiene >
+Usuario "1" -- "1" Presupuesto : tiene >
+Presupuesto "1" --* "*" Movimiento : incluye >
+Movimiento --> "1" CategoriasIngresos : es_un >
+Movimiento --> "1" CategoriasGastos : es_un >
+
+hide CategoriasIngresos methods
+hide CategoriasGastos methods
+
+@enduml
